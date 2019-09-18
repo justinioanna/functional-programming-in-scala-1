@@ -7,7 +7,8 @@ object NewtonsMethod {
   def sqrt(x: Double): Double = {
 
     def sqrtIter(guess: Double): Double =
-      if (isGoodEnough(guess)) guess else sqrtIter(improve(guess))
+      if (isGoodEnough(guess)) guess
+      else sqrtIter(improve(guess))
 
     def isGoodEnough(guess: Double): Boolean =
       abs(guess * guess - x) / x < 0.001
