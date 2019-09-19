@@ -1,9 +1,9 @@
 package week1.assignments
 
+import ParenthesesBalancing.balance
 import org.scalatest.FunSuite
 
 class ParenthesesBalancingSuite extends FunSuite {
-  import ParenthesesBalancing.balance
 
   test("balance: '(if (zero? x) max (/ 1 x))' is balanced") {
     assert(balance("(if (zero? x) max (/ 1 x))".toList))
