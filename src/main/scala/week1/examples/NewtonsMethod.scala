@@ -19,10 +19,4 @@ object NewtonsMethod {
     sqrtIter(1.0)
   }
 
-  def main(args: Array[String]) {
-    println(sqrt(2))
-    println(sqrt(4))
-    println(sqrt(1e-6))
-    println(sqrt(1e60))
-  }
 }
