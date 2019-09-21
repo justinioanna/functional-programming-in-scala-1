@@ -4,4 +4,4 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Functional Programming Principles in Scala
-Examples and solutions to the Functional Programming Principles in Scala Coursera course
+Exercises and assignment solutions for the Functional Programming Principles in Scala Coursera course

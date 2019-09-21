@@ -1,4 +1,4 @@
-package week2.examples
+package week2.exercises
 
 import Currying.{product, factorial}
 import org.scalatest.FunSuite

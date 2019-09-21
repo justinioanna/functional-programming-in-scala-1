@@ -1,4 +1,4 @@
-package week1.examples
+package week1.exercises
 
 object NewtonsMethod {
 
