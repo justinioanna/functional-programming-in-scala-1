@@ -1,9 +1,9 @@
-package patmat
+package week4.assignments
 
 /**
- * The interface used by the grading infrastructure. Do not change signatures
- * or your submission will fail with a NoSuchMethodError.
- */
+  * The interface used by the grading infrastructure. Do not change signatures
+  * or your submission will fail with a NoSuchMethodError.
+  */
 trait HuffmanInterface {
   def weight(tree: CodeTree): Int
   def chars(tree: CodeTree): List[Char]
@@ -11,7 +11,10 @@ trait HuffmanInterface {
   def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf]
   def singleton(trees: List[CodeTree]): Boolean
   def combine(trees: List[CodeTree]): List[CodeTree]
-  def until(done: List[CodeTree] => Boolean, merge: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree]
+  def until(
+      done: List[CodeTree] => Boolean,
+      merge: List[CodeTree] => List[CodeTree]
+  )(trees: List[CodeTree]): List[CodeTree]
   def createCodeTree(chars: List[Char]): CodeTree
   def decode(tree: CodeTree, bits: List[Int]): List[Char]
   def decodedSecret: List[Char]

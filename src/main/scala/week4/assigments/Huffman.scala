@@ -1,4 +1,4 @@
-package patmat
+package week4.assignments
 
 /**
   * A huffman code is represented by a binary tree.
@@ -21,9 +21,15 @@ case class Leaf(char: Char, weight: Int) extends CodeTree
 trait Huffman extends HuffmanInterface {
 
   // Part 1: Basics
-  def weight(tree: CodeTree): Int = ??? // tree match ...
+  def weight(tree: CodeTree): Int = tree match {
+    case tree: Fork => tree.weight
+    case tree: Leaf => tree.weight
+  }
 
-  def chars(tree: CodeTree): List[Char] = ??? // tree match ...
+  def chars(tree: CodeTree): List[Char] = tree match {
+    case tree: Fork => tree.chars
+    case tree: Leaf => List(tree.char)
+  }
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
     Fork(
@@ -69,7 +75,7 @@ trait Huffman extends HuffmanInterface {
     *       println("integer is  : "+ theInt)
     *   }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = chars.groupBy(identity).mapValues(_.size).toList
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
