@@ -1,5 +1,7 @@
 package week4.assignments
 
+import scala.annotation.tailrec
+
 /**
   * A huffman code is represented by a binary tree.
   *
@@ -11,7 +13,12 @@ package week4.assignments
   * leaves.
   */
 abstract class CodeTree
-case class Fork(left: CodeTree, right: CodeTree, chars: List[Char], weight: Int) extends CodeTree
+case class Fork(
+    left: CodeTree,
+    right: CodeTree,
+    chars: List[Char],
+    weight: Int
+) extends CodeTree
 case class Leaf(char: Char, weight: Int) extends CodeTree
 
 /**
@@ -75,7 +82,8 @@ trait Huffman extends HuffmanInterface {
     *       println("integer is  : "+ theInt)
     *   }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = chars.groupBy(identity).mapValues(_.size).toList
+  def times(chars: List[Char]): List[(Char, Int)] =
+    chars.groupBy(identity).mapValues(_.size).toList
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -84,12 +92,13 @@ trait Huffman extends HuffmanInterface {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] =
+    for (pair <- freqs.sortBy(_._2)) yield Leaf(pair._1, pair._2)
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
     */
-  def singleton(trees: List[CodeTree]): Boolean = ???
+  def singleton(trees: List[CodeTree]): Boolean = trees.tail == Nil
 
   /**
     * The parameter `trees` of this function is a list of code trees ordered
@@ -103,7 +112,14 @@ trait Huffman extends HuffmanInterface {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+  def combine(trees: List[CodeTree]): List[CodeTree] = {
+    if (trees.isEmpty || trees.tail == Nil) trees
+    else {
+      val (firstTwo, remainder) = trees.splitAt(2)
+      (makeCodeTree(firstTwo(0), firstTwo(1)) :: remainder).sortBy(x => weight(x))
+    }
+
+  }
 
   /**
     * This function will be called in the following way:
@@ -116,10 +132,9 @@ trait Huffman extends HuffmanInterface {
     * In such an invocation, `until` should call the two functions until the list of
     * code trees contains only one single tree, and then return that singleton list.
     */
-  def until(
-      done: List[CodeTree] => Boolean,
-      merge: List[CodeTree] => List[CodeTree]
-  )(trees: List[CodeTree]): List[CodeTree] = ???
+  def until(done: List[CodeTree] => Boolean, merge: List[CodeTree] => List[CodeTree])(
+      trees: List[CodeTree]
+  ): List[CodeTree] = if (done(trees)) trees else until(done, merge)(merge(trees))
 
   /**
     * This function creates a code tree which is optimal to encode the text `chars`.
@@ -127,7 +142,10 @@ trait Huffman extends HuffmanInterface {
     * The parameter `chars` is an arbitrary text. This function extracts the character
     * frequencies from that text and creates a code tree based on them.
     */
-  def createCodeTree(chars: List[Char]): CodeTree = ???
+  def createCodeTree(chars: List[Char]): CodeTree = {
+    val orderedLeafList = makeOrderedLeafList(times(chars))
+    until(singleton, combine)(orderedLeafList).head
+  }
 
   // Part 3: Decoding
 
@@ -137,7 +155,20 @@ trait Huffman extends HuffmanInterface {
     * This function decodes the bit sequence `bits` using the code tree `tree` and returns
     * the resulting list of characters.
     */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+    @tailrec
+    def decodeAcc(chars: List[Char], subTree: CodeTree, remainingBits: List[Bit]): List[Char] =
+      subTree match {
+        case Leaf(char, _) =>
+          if (remainingBits.isEmpty) chars ::: List(char)
+          else decodeAcc(chars ::: List(char), tree, remainingBits)
+        case Fork(left, right, _, _) =>
+          if (remainingBits.head == 0) decodeAcc(chars, left, remainingBits.tail)
+          else decodeAcc(chars, right, remainingBits.tail)
+      }
+
+    decodeAcc(Nil, tree, bits)
+  }
 
   /**
     * A Huffman coding tree for the French language.
@@ -248,7 +279,7 @@ trait Huffman extends HuffmanInterface {
   /**
     * Write a function that returns the decoded secret
     */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
   // Part 4a: Encoding using Huffman tree
 
@@ -295,3 +326,7 @@ trait Huffman extends HuffmanInterface {
 }
 
 object Huffman extends Huffman
+
+object Main extends App {
+  println(Huffman.decodedSecret)
+}
