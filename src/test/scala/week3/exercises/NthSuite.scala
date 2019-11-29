@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 
 class NthSuite extends FunSuite {
 
-  val list = new Cons(1, new Cons(2, new Cons(3, new Nil)))
+  val list = new Cons(1, new Cons(2, new Cons(3, Nil)))
 
   test("Start of list.") {
     assert(nth(0, list) === 1)
