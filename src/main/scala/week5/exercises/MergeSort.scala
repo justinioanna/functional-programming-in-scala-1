@@ -3,7 +3,7 @@ package week5.exercises
 import math.Ordering
 
 object MergeSort {
-  def msort[T](xs: List[T])(ord: Ordering[T]): List[T] = {
+  def msort[T](xs: List[T])(implicit ord: Ordering[T]): List[T] = {
     val n = xs.length / 2
     if (n == 0) xs
     else {
@@ -14,7 +14,7 @@ object MergeSort {
           if (ord.lt(x, y)) x :: merge(xs1, ys) else y :: merge(xs, ys1)
       }
       val (fst, snd) = xs.splitAt(n)
-      merge(msort(fst)(ord), msort(snd)(ord))
+      merge(msort(fst), msort(snd))
     }
   }
 }
